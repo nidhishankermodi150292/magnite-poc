@@ -1,0 +1,79 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>PPI - Magnite Integration</title>
+
+    <script async src="https://micro.rubiconproject.com/prebid/dynamic/8941.js"></script>
+    <script type="text/javascript" src="https://www.googletagservices.com/tag/js/gpt.js" async></script>
+</head>
+
+<body>
+
+   <script>
+    var PREBID_TIMEOUT = 1000;
+    var FAILSAFE_TIMEOUT = 3000;
+
+    // gpt initialization and slot definition handled by publisher
+    window.googletag = window.googletag || { cmd: [] };
+    googletag.cmd.push(() => {
+        googletag.pubads().disableInitialLoad();
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().enableAsyncRendering();
+        googletag.pubads().collapseEmptyDivs(true);
+
+        googletag.enableServices();
+
+        let adUnits = [
+            {
+                divID: "test-1",
+                slotId: "/322166814/www.smarter.com/HB/Smarter_Desktop_Feed_Center_Center1_Dynamic_300x250",
+                sizes: [[300, 250]]
+            },
+        ];
+        console.log("gpt enabled");
+    });
+
+    // pbjs initialization and configuration handled by publisher
+    window.pbjs = window.pbjs || { que: [] };
+    let pbjsConfig = {
+        useBidCache: true,
+        debug: true,
+        bidderTimeout: 10000,
+        rubicon: { singleRequest: true },
+        // add other prebid config here, like granularity, cmp, user syncs, bid aliases, etc.
+    }
+
+    window.pbjs.que.push(() => {
+        let to = [
+            // initial auction and render ads for the first slide
+            {
+                hbInventory: {
+                    type: 'AUPSlotPath',
+                    values: {
+                        name: '/322166814/www.smarter.com/HB/Smarter_Desktop_Feed_Center_Center2_Dynamic_728x90',
+                    },
+                },
+                hbSource: {
+                    type: 'auction',
+                },
+                hbDestination: {
+                    type: 'gpt',
+                    values: { div: 'test-1' }
+                }
+            }];
+        pbjs.ppi.requestBids(to);
+    });
+    </script>
+
+    <div class="instructions">
+        <h1> PPI Test Pages - Gallery layout</h1>
+    </div>
+    <br>
+    <div id="test-1" class="adunit">Advertisement</div>
+</body>
+
+</html>
